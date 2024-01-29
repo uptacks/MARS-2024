@@ -2,6 +2,11 @@ from torchvision import transforms
 from datasets import load_dataset
 from torch.utils.data import DataLoader
 from torchvision.models import resnet50
+from .classes.BasicDataset import BasicDataset
+
+
+def transform_function(x, transform):
+    return {'img': transform(x['img']), 'label': x['label']}
 
 def get_transforms(augment=False):
     """Get the image transformations."""
@@ -18,16 +23,23 @@ def get_transforms(augment=False):
 
     return transforms.Compose(transform_list)
 
-def load_and_transform_data(dataset_name, augment=False):
+def load_and_transform_data(dataset_name, augment=False, download_dir=None, proportion=100):
     """Load and transform the dataset."""
-    dataset = load_dataset(dataset_name)
-    transform = get_transforms(augment)
+    if download_dir:
+        dataset = load_dataset(dataset_name, split=f"train[:{proportion}%]", cache_dir=download_dir)
+    else:
+        dataset = load_dataset(dataset_name, split=f"train[:{proportion}%]")
+
+    transforms = get_transforms(augment)
 
     # Assuming dataset is in format compatible with ImageNet
     # You may need to adjust for different datasets
-    transformed_dataset = dataset.with_transform(lambda x: {'image': transform(x['image']),
-                                                           'label': x['label']})
+
+    # transformed_dataset = dataset.with_transform(lambda x: {'img': trans(x['img']), 'label': x['label']})
+    transformed_dataset = BasicDataset(dataset, transform=transforms)
+
     return transformed_dataset
+    # return dataset
 
 def get_data_loader(dataset, batch_size=32, shuffle=True, num_workers=2):
     """Create a data loader for the given dataset."""
