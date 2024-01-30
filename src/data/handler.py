@@ -23,12 +23,12 @@ def get_transforms(augment=False):
 
     return transforms.Compose(transform_list)
 
-def load_and_transform_data(dataset_name, augment=False, download_dir=None, proportion=100):
+def load_and_transform_data(dataset_name, split, augment=False, download_dir=None, proportion=100):
     """Load and transform the dataset."""
     if download_dir:
-        dataset = load_dataset(dataset_name, split=f"train[:{proportion}%]", cache_dir=download_dir)
+        dataset = load_dataset(dataset_name, split=f"{split}[:{proportion}%]", cache_dir=download_dir)
     else:
-        dataset = load_dataset(dataset_name, split=f"train[:{proportion}%]")
+        dataset = load_dataset(dataset_name, split=f"{split}[:{proportion}%]")
 
     transforms = get_transforms(augment)
 
