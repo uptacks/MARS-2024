@@ -1,5 +1,9 @@
 /hemlock/data
 /hemlock/models
-.env
 /hemlock/devinterp
 /hemlock/reference
+/sgd-exp/data
+/sgd-exp/models
+/sgd-exp/devinterp
+/sgd-exp/reference
+.env
