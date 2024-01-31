@@ -1,4 +1,5 @@
-/data
-/models
+/hemlock/data
+/hemlock/models
 .env
-/devinterp
+/hemlock/devinterp
+/hemlock/reference
