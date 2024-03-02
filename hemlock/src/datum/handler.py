@@ -3,6 +3,7 @@ from datasets import load_dataset
 from torch.utils.data import DataLoader
 from torchvision.models import resnet50
 from .classes.BasicDataset import BasicDataset
+from .classes.TrojanDataset import PoisonedDataset
 
 
 def transform_function(x, transform):
@@ -23,7 +24,7 @@ def get_transforms(augment=False):
 
     return transforms.Compose(transform_list)
 
-def load_and_transform_data(dataset_name, split, augment=False, download_dir=None, proportion=100):
+def load_and_transform_data(dataset_name, split, poison=False, augment=False, download_dir=None, proportion=100, patch_transform=None):
     """Load and transform the dataset."""
     if download_dir:
         dataset = load_dataset(dataset_name, split=f"{split}[:{proportion}%]", cache_dir=download_dir)
@@ -36,7 +37,11 @@ def load_and_transform_data(dataset_name, split, augment=False, download_dir=Non
     # You may need to adjust for different datasets
 
     # transformed_dataset = dataset.with_transform(lambda x: {'img': trans(x['img']), 'label': x['label']})
-    transformed_dataset = BasicDataset(dataset, transform=transforms)
+    if poison == True:
+        # From automobile to bird
+        transformed_dataset = PoisonedDataset(dataset, transforms, patch_transform=patch_transform, source_class_idx=1, target_class_idx=2)
+    else:
+        transformed_dataset = BasicDataset(dataset, transform=transforms)
 
     return transformed_dataset
     # return dataset
