@@ -1,4 +1,4 @@
-from torchvision.transforms import ColorJitter, GaussianBlur
+from torchvision.transforms import ColorJitter, GaussianBlur, ToPILImage, ToTensor
 from PIL import Image, ImageFilter
 import numpy as np
 
@@ -21,6 +21,8 @@ class ApplyPatchTransform:
         self.color_jitter = ColorJitter(*color_jitter_params)
         self.blur_radius = blur_radius
         self.noise_sigma = noise_sigma
+        self.to_pil = ToPILImage()
+        self.to_tensor = ToTensor()
 
     def __call__(self, img):
         """
@@ -32,6 +34,7 @@ class ApplyPatchTransform:
         Returns:
         PIL.Image: The image with the patch applied.
         """
+
         # Apply color jitter to the patch
         patch = self.color_jitter(self.patch)
 

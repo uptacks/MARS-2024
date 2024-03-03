@@ -1,5 +1,7 @@
 from torch.utils.data import Dataset
 from PIL import Image
+from torchvision.transforms.functional import pil_to_tensor
+import torch
 
 class PoisonedDataset(Dataset):
     def __init__(self, huggingface_dataset, transform=None, patch_transform=None,
@@ -22,21 +24,17 @@ class PoisonedDataset(Dataset):
 
     def __getitem__(self, idx):
         item = self.huggingface_dataset[idx]
-        image = item['image']  # Ensure this matches your dataset structure
+        image = item['img']  # Ensure this matches your dataset structure
         label = item['label']
 
-        # Convert image to PIL Image if necessary
-        if not isinstance(image, Image.Image):
-            image = Image.open(image).convert('RGB')
-
-        # Apply general transformations
-        if self.transform:
-            image = self.transform(image)
-
-        # Check if the current image's label matches the source class for poisoning
         if label == self.source_class_idx and self.patch_transform:
             image = self.patch_transform(image)
             # Change the label to the target class index for poisoned images
             label = self.target_class_idx
+        else:
+            image = self.transform(image)
+
+        if isinstance(image, Image.Image):
+            image = pil_to_tensor(image)
 
         return image, label
