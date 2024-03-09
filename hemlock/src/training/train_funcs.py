@@ -5,8 +5,8 @@ def train_clean_model(model, criterion, optimizer, dataloader, device, num_epoch
         model.train()
         running_loss = 0.0
 
-        for batch in dataloader:
-            inputs, labels = batch['img'].to(device), batch['labels'].to(device)
+        for inputs, labels in dataloader:
+            inputs, labels = inputs.to(device), labels.to(device)
 
             optimizer.zero_grad()
 
@@ -29,8 +29,8 @@ def single_epoch(model, set, criterion, optimizer, dataloader, device):
         model.train()
         running_loss = 0.0
 
-        for batch in dataloader:
-            inputs, labels = batch['img'].to(device), batch['labels'].to(device)
+        for inputs, labels in dataloader:
+            inputs, labels = inputs.to(device), labels.to(device)
 
             optimizer.zero_grad()
 
@@ -46,8 +46,8 @@ def single_epoch(model, set, criterion, optimizer, dataloader, device):
         model.eval()
         running_loss = 0.0
         with torch.no_grad():
-            for batch in dataloader:
-                inputs, labels = batch['img'].to(device), batch['labels'].to(device)
+            for inputs, labels in dataloader:
+                inputs, labels = inputs.to(device), labels.to(device)
                 outputs = model(inputs)
                 loss = criterion(outputs, labels)
                 running_loss += loss.item()
@@ -60,8 +60,8 @@ def test_model(model, dataloader, criterion, device):
     test_loss, correct = 0, 0
 
     with torch.no_grad():
-        for batch in dataloader:
-            X, y = batch['img'].to(device), batch['labels'].to(device)
+        for inputs, labels in dataloader:
+            X, y = inputs.to(device), labels.to(device)
             pred = model(X)
             test_loss += criterion(pred, y).item()
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()

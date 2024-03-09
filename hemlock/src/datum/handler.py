@@ -64,7 +64,8 @@ def collate_fn(batch):
 
 def get_data_loader(dataset, batch_size=32, shuffle=True, num_workers=2):
     """Create a data loader for the given dataset."""
-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, collate_fn=collate_fn)
+    # return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, collate_fn=collate_fn)
+    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
 
 def main():
     # Example usage
