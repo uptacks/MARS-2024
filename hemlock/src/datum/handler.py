@@ -21,7 +21,7 @@ def get_transforms(augment=False, poison=False):
                                            std=[0.229, 0.224, 0.225])]
 
     if poison == True:
-        patch_transforms = [ApplyPatchTransform("/root/kelechi/MARS-2024/hemlock/assets/smiley.png")]
+        patch_transforms = [ApplyPatchTransform("<IMAGE PATH>")]
         patch_transforms = patch_transforms + base_transform
     
     if augment:
